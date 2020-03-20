@@ -285,15 +285,15 @@ st.d.cont.table # good balance on gfd receipt, low imbalance (only one variable 
 
 
 # covariate balance test (binary variables) 
-#dat.test.bin <- dat.2[,c(4, 14:21, 36, 39, 40, 42, 50, 53, 54, 59)]
-#dat.test.bin <- apply(dat.test.bin, 2, function(x) as.numeric(x))
-#treat.bin <- (dat.2$gfd == 1)
+dat.test.bin <- dat.2[,c(4, 14:21, 36, 39, 40, 42, 50, 53, 54, 59)]
+dat.test.bin <- apply(dat.test.bin, 2, function(x) as.numeric(x))
+treat.bin <- (dat.2$gfd == 1)
 
-#st.d.bin <- apply(dat.test.bin, 2, function(x){
-#  100 *(mean(x[treat.bin]) - mean(x[!treat.bin])) / sqrt(0.5*((mean(x[treat.bin]) * (1-mean(x[!treat.bin]))) + (mean(x[!treat.bin]) * (1-mean(x[treat.bin])))))
-#})
-#st.d.bin.table <- abs(st.d.bin)
-#st.d.bin.table # likewise good balance on 'gfd' variable
+st.d.bin <- apply(dat.test.bin, 2, function(x){
+  100 *(mean(x[treat.bin]) - mean(x[!treat.bin])) / sqrt(0.5*((mean(x[treat.bin]) * (1-mean(x[!treat.bin]))) + (mean(x[!treat.bin]) * (1-mean(x[treat.bin])))))
+})
+st.d.bin.table <- abs(st.d.bin)
+st.d.bin.table # likewise good balance on 'gfd' variable
 
 # cleanup; no NAs, no detailed expenditures, (keep collinear vars for additional modelling as needed), add food expenditure share and location fixed effects, eliminate morethanmonth_aid 
 summary(dat.2)
@@ -314,11 +314,11 @@ dat.2 <- na.omit(dat.2)
 dat.psm <- na.omit(dat.psm)
 
 # alternative is set NA weights to 1 :: dat.psm[is.na(dat.psm$wts)] <- 1
-#svy.1 <- svydesign(data = dat.psm,
-#                  id = ~psu,
-#                  nest = TRUE,
-#                  strata = ~county,
-#                  weights = ~wts)
+svy.1 <- svydesign(data = dat.psm,
+                  id = ~psu,
+                  nest = TRUE,
+                  strata = ~county,
+                  weights = ~wts)
 
 # naive fit
 fit.naive <- lm(FCS ~ gfd,
