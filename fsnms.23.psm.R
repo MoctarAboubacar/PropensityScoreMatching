@@ -28,11 +28,11 @@ percent.missing <- a %>%
   map_dbl(function(x) round(sum(is.na(x))/nrow(a)*100,1))
 sum.missing <- as.data.frame(sum.missing)
 percent.missing <- as.data.frame(percent.missing)
-na.table <<- setDT(cbind(sum.missing, percent.missing), keep.rownames = "variable")[] # <<- assigns object outside the function call
+na.table <<- setDT(cbind(sum.missing, percent.missing), keep.rownames = "variable")[] 
 na.table.ggplot <<- na.table %>%
   arrange(percent.missing) %>%
   ggplot(aes(x = reorder(variable, -percent.missing), y = percent.missing, color = percent.missing))+
-  scale_color_gradientn(colours = rainbow(4))+ # not the prettiest color scale, find something better sometime
+  scale_color_gradientn(colours = rainbow(4))+ 
   xlab("Variables")+
   geom_bar(stat = 'identity')+
   ggtitle("Percent missing")
@@ -272,7 +272,7 @@ glimpse(dat.2)
 
 ## PSM modelling
 # 1. Preliminary analysis
-#covariate balance test (continuous variables)
+# covariate balance test (continuous variables)
 
 cov.cont <- dat.2 %>%
   dplyr::select_if(is.numeric)
@@ -353,7 +353,6 @@ model.1 <- glm(gfd ~ edu_hh + male_under5 + female_under5 + male5to15 + male16to
 summary(model.1)
 
 # model with polinomials and interactions... a *slightly* better fit
-
 
 model.2 <- glm(gfd ~ edu_hh + male_under5 + female_under5 + male5to15 + male16to60 + female16to60 + maleover60 + femaleover60 + members_hh +  recent_migrants +  livelihood_1 + livelihood_2 + sold_productiveassets + land_access + sex_hh + age_hh + water_time + jerrycans + defecate_location + remittance  + graingrinding + Total_NonFood_exp + Total_Cash_Expe + Total_Credit_Expe + Total_nopurch_Expe + num_cattle + num_goats + num_poultry + bicycle + trad_stove + seeds + FoodExp_share + land_x_sex + age_hh2 + Total_nopurch_Expe2 + FCS,
                data = dat.psm,
@@ -446,4 +445,5 @@ matched.cases <- cbind(matches, yT, yC)
 t.test(matched.cases$yT, matched.cases$yC,
        paired = TRUE) 
 
-# No significant differences in food consumption score, total expenditure, or cash expenditure were found, after propensity score matching. Substantively this means that there is either a serious endogeneity issue, or in actual fact gfd does not greatly contribute to improvements in the food consumption score of households (i.e. at the same levels of all covariates, households have similar food consumption regardless of status as beneficiaries. If households were not given gfd, they would still ensure to have a similar food consumption score)
+# No significant differences in food consumption score, total expenditure, or cash expenditure were found, after propensity score matching. 
+# Substantively this means that there is either a serious endogeneity issue, or in actual fact gfd does not greatly contribute to improvements in the food consumption score of households (i.e. at the same levels of all covariates, households have similar food consumption regardless of status as beneficiaries. If households were not given gfd, they would still ensure to have a similar food consumption score)
